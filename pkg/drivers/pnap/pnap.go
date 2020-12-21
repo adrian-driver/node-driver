@@ -435,7 +435,7 @@ func (d *Driver) GetSSHUsername() string {
 	} else if strings.Contains(d.ServerOs, "centos") {
 		d.SSHUser = "centos"
 	} else if strings.Contains(d.ServerOs, "windows") {
-		d.SSHUser = "admin"
+		d.SSHUser = "Admin"
 	}
 
 	return d.SSHUser
