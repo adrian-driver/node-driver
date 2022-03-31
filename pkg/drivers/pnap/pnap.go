@@ -496,7 +496,7 @@ func (d *Driver) GetSSHUsername() string {
 // Token is definitelly expired after one hour, and this method enables other ways of authentication.
 func (d *Driver) setTokenToEmptySTring() {
 
-	if d.ProvisionedOn != nil && d.ProvisionedOn.Add(time.Minute*15).Before(time.Now()) {
+	if d.ProvisionedOn != nil && d.ProvisionedOn.Add(time.Minute*60).Before(time.Now()) {
 		log.Info("Bearer token invalidated.")
 		d.BearerToken = ""
 	}
