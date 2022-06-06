@@ -1,6 +1,7 @@
 package pnap
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -11,6 +12,7 @@ import (
 	"github.com/docker/machine/libmachine/mcnflag"
 	"github.com/docker/machine/libmachine/ssh"
 	"github.com/docker/machine/libmachine/state"
+
 	"github.com/pkg/errors"
 
 	"github.com/PNAP/go-sdk-helper-bmc/command/bmcapi/server"
@@ -18,6 +20,7 @@ import (
 
 	"github.com/PNAP/go-sdk-helper-bmc/command/billingapi/product"
 	helperdto "github.com/PNAP/go-sdk-helper-bmc/dto"
+	jwt "github.com/golang-jwt/jwt/v4"
 	bmcapiclient "github.com/phoenixnap/go-sdk-bmc/bmcapi"
 )
 
@@ -73,11 +76,11 @@ func (d *Driver) getClient() (*receiver.BMCSDK, error) {
 		configuration := helperdto.Configuration{}
 		configuration.TokenURL = "https://auth.phoenixnap.com/auth/realms/BMC/protocol/openid-connect/token"
 		configuration.ApiHostName = "https://api.phoenixnap.com/"
-		configuration.UserAgent = "PNAP-Rancher-Node-Driver/0.3.0"
+		configuration.UserAgent = "PNAP-Rancher-Node-Driver/0.4.0"
 		configuration.PoweredBy = "PNAP-Rancher-Node-Driver"
 
-		if d.BearerToken != "" {
-			//log.Info("Token auth will be performed..")
+		if d.BearerToken != "" && d.isTokenValid() {
+			log.Info("Token auth with BMC API will be performed..")
 			configuration.BearerToken = d.BearerToken
 			pnapClient = receiver.NewBMCSDKWithTokenAuthentication(configuration)
 			return &pnapClient, nil
@@ -499,5 +502,36 @@ func (d *Driver) setTokenToEmptySTring() {
 	if d.ProvisionedOn != nil && d.ProvisionedOn.Add(time.Minute*60).Before(time.Now()) {
 		log.Info("Bearer token invalidated.")
 		d.BearerToken = ""
+	}
+}
+
+func (d *Driver) isTokenValid() bool {
+	token, _, errjj := new(jwt.Parser).ParseUnverified(d.BearerToken, jwt.MapClaims{})
+	if errjj != nil {
+		log.Info("Error happened when validating token expiration ", errjj)
+		return false
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		log.Info("Can't convert token's claims to standard claims.")
+		return false
+	}
+
+	var tm time.Time
+	switch iat := claims["exp"].(type) {
+	case float64:
+		tm = time.Unix(int64(iat), 0)
+	case json.Number:
+		v, _ := iat.Int64()
+		tm = time.Unix(v, 0)
+	}
+	var now = time.Now()
+	if tm.Before(now) {
+		log.Info("Token expired. Use cloud credentials.")
+		return false
+	} else {
+		//log.Info("Token is not expired. Try to use it for authentication.")
+		return true
 	}
 }
