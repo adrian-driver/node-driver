@@ -224,7 +224,7 @@ func (d *Driver) Create() error {
 	} else {
 		/* response := &dto.LongServer{}
 		response.FromBytes(resp) */
-		d.ID = (response.Id)
+		d.ID = response.Id
 		d.Name = d.MachineName
 		//d.MachineName = (response.ID)
 		d.PrivateIPAddresses = response.PrivateIpAddresses
@@ -349,10 +349,12 @@ func (d *Driver) Remove() error {
 	}
 
 	requestCommand := server.NewDeleteServerCommand(*client, d.ID)
-	_, err1 := requestCommand.Execute()
+	resp, err1 := requestCommand.Execute()
 	if err1 != nil {
 		return err1
 	}
+
+	log.Infof("Removing pnap machine instance with id %s returned result %s", d.ID, resp.Result)
 
 	return nil
 }
