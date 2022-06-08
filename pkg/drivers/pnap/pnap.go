@@ -86,7 +86,8 @@ func (d *Driver) getClient() (*receiver.BMCSDK, error) {
 			return &pnapClient, nil
 		} else if (d.ClientIdentifier != "") && (d.ClientSecret != "") {
 			//pnapClient = client.NewPNAPClient(d.ClientIdentifier, d.ClientSecret)
-			//log.Info("Cleint cred auth will be performed..")
+			log.Info("Cloud credentials will be used for authentication..")
+			//log.Infof("Client id %s ", d.ClientIdentifier)
 			configuration.ClientID = d.ClientIdentifier
 			configuration.ClientSecret = d.ClientSecret
 			pnapClient = receiver.NewBMCSDK(configuration)
