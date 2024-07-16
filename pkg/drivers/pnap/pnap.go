@@ -268,13 +268,6 @@ func (d *Driver) Create() error {
 		serverPrivateNetworkObject := bmcapiclient.ServerPrivateNetwork{}
 		serverPrivateNetworkObject.Id = d.ServerPrivateNetwork
 
-		//to remove before deployment
-		//NetIps := make([]string, 3)
-		//NetIps[0] = "10.0.0.26"
-		//NetIps[1] = "10.0.0.27"
-		//NetIps[2] = "10.0.0.28"
-		//serverPrivateNetworkObject.Ips = NetIps
-		//ends here
 		serPrivateNets[0] = serverPrivateNetworkObject
 		privateNetworkConfigurationObject.PrivateNetworks = serPrivateNets
 		networkConfigurationObject.PrivateNetworkConfiguration = &privateNetworkConfigurationObject
