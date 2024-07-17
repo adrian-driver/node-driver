@@ -288,8 +288,8 @@ func (d *Driver) Create() error {
 	dtoOsConfiguration.CloudInit = &cloudInitObject
 	request.OsConfiguration = &dtoOsConfiguration
 
-	b, _ := json.MarshalIndent(request, "", "  ")
-	log.Info("request object is" + string(b))
+	//b, _ := json.MarshalIndent(request, "", "  ")
+	//log.Info("request object is" + string(b))
 	requestCommand := server.NewCreateServerCommand(*client, *request, *query)
 
 	response, err := requestCommand.Execute()
