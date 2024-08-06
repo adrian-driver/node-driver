@@ -6,7 +6,7 @@ import (
 	"fmt"
 	// "io/ioutil"
 	// "strings"
-	"time"
+	// "time"
 
 	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/log"
@@ -14,7 +14,7 @@ import (
 	// "github.com/docker/machine/libmachine/ssh"
 	"github.com/docker/machine/libmachine/state"
 
-	"github.com/pkg/errors"
+	// "github.com/pkg/errors"
 )
 
 // Driver is the implementation of BaseDriver interface
@@ -45,16 +45,10 @@ func (d *Driver) DriverName() string {
 // SetConfigFromFlags configures the driver with the object that was returned
 // by RegisterCreateFlags
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
-
 	return nil
 }
 func (d *Driver) createSSHKey() (string, error) {
 	return "", nil
-}
-
-// publicSSHKeyPath is always SSH Key Path appended with ".pub"
-func (d *Driver) publicSSHKeyPath() string {
-	return d.GetSSHKeyPath() + ".pub"
 }
 
 // Create a host using the driver's config
@@ -96,23 +90,7 @@ func (d *Driver) GetURL() (string, error) {
 }
 
 func (d *Driver) waitForStatus(a state.State) error {
-	for {
-		//log.Infof("Waiting for Machine %s...", a.String())
-		act, err := d.GetState()
-		if err != nil {
-			return errors.Wrap(err, "Could not get Server state.")
-		}
 
-		if act == a {
-			log.Infof("Created pnap machine reached state %s.", a.String())
-			break
-		} else if act == state.Error {
-			return errors.Wrap(err, "Server state could not be retrived.")
-		}
-
-		log.Infof("Waiting for Machine %s...", a.String())
-		time.Sleep(10 * time.Second)
-	}
 	return nil
 }
 
@@ -171,8 +149,4 @@ func (d *Driver) GetSSHUsername() string {
 // setTokenToEmptySTring invalidates token.
 // Token is definitelly expired after one hour, and this method enables other ways of authentication.
 func (d *Driver) setTokenToEmptySTring() {
-}
-
-func (d *Driver) isTokenValid() bool {
-	return true
 }
