@@ -1,4 +1,4 @@
-package pnap
+package poc
 
 import (
 	"encoding/base64"
@@ -184,7 +184,7 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 
 // DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
-	return "pnap"
+	return "poc"
 }
 
 // SetConfigFromFlags configures the driver with the object that was returned

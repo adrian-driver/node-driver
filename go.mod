@@ -1,4 +1,4 @@
-module github.com/phoenixnap/docker-machine-driver-pnap
+module github.com/adrian-driver/node-driver
 
 require (
 	github.com/PNAP/go-sdk-helper-bmc v0.16.1

@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/docker/machine/libmachine/drivers/plugin"
-	"github.com/phoenixnap/docker-machine-driver-pnap/pkg/drivers/pnap"
+	"github.com/adrian-driver/node-driver/pkg/drivers/poc"
 )
 
 func main() {
-	plugin.RegisterDriver(pnap.NewDriver())
+	plugin.RegisterDriver(poc.NewDriver())
 }
